@@ -6,6 +6,8 @@ namespace Datagenerator;
  * Generate data based on field templates
  **/
 class DataGenerator {
+	protected static $_lipsum;
+
 	public static function generate($templates, $num_records) {
 		$data = [];
 		for ($i = 0; $i < $num_records; $i++) {
@@ -23,21 +25,46 @@ class DataGenerator {
 		return $data;
 	}
 
+	public static function lipsum($amount = 1, $what = 'paras', $start = 0) {
+		if (! self::$_lipsum or !isset(self::$_lipsum[$what]) or count(self::$_lipsum[$what]) < $amount) {
+			$n = $amount * 5;
+
+			$lipsum = simplexml_load_file("http://www.lipsum.com/feed/xml?amount=$n&what=$what&start=$start")->lipsum;
+			$split = $what == 'bytes' ? ''
+			       : $what == 'words' ? ' '
+				   : 					"\n";
+			if ($what == 'words') {
+				$lipsum = preg_replace('/[[:punct:]]/', '', $lipsum);
+			}
+			$lipsum = explode($split, $lipsum);
+			self::$_lipsum[$what] = $lipsum;
+		}
+
+		return array_splice(self::$_lipsum[$what], 0, $amount);
+	}
+
 	protected static function _make_name($template) {
+		return self::_make_string($template);
+	}
+
+	protected static function _make_string($template) {
 		preg_match_all('/\{(\w+)\}/', $template, $matches);
 
 		foreach ($matches[1] as $token) {
 			if ($token == 'initial') {
 				$choice = chr(rand(65, 25+65));
 			}
+			if ($token == 'lipsum') {
+				$choice = join('.', self::lipsum(rand(1,3), 'words'));
+			}
 			else {
-				$choice = \DB::select('name')
-					->from('names')
+				$choice = \DB::select('value')
+					->from('string_template_values')
 					->where(\DB::expr('FIND_IN_SET(' . \DB::quote($token) . ', type)'), '!=', 0)
 					->order_by(\DB::expr('RAND()'))
 					->limit(1)
 					->execute()
-					->as_array(null, 'name')[0];
+					->as_array(null, 'value')[0];
 			}
 
 			$template = substr_replace($template, $choice, strpos($template, "{{$token}}"), strlen($token) + 2);

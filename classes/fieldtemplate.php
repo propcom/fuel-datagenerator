@@ -45,6 +45,7 @@ class FieldTemplate
 		'enum' => [
 			'display' => 'Enum or set',
 			'type' => 'enum',
+			'presets' => [],
 		],
 		'number' => [
 			'display' => 'Numeric data',
@@ -58,6 +59,15 @@ class FieldTemplate
 					'value' => '(0{3}) {7}',
 				],
 			],
+		],
+		'string' => [
+			'display' => 'String data',
+			'presets' => [
+				'email1' => [
+					'display' => 'Email address',
+					'value' => '{forename}{surname}@{domain}',
+				]
+			]
 		]
 	];
 
