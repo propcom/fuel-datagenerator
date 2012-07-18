@@ -48,7 +48,7 @@ class FieldTemplate
 
 	protected $_type;
 	protected $_subtype;
-	protected $_options;
+	protected $_value;
 
 	public static function type_options() {
 		$arr = [];
@@ -78,6 +78,10 @@ class FieldTemplate
 		return $arr;
 	}
 
+	public function type() {
+		return $this->_type;
+	}
+
 	public function subtype($st = null) {
 		if (null === $st) {
 			return $this->_subtype;
@@ -94,12 +98,21 @@ class FieldTemplate
 		}
 	}
 
-	public function value() {
-		if (! $this->_subtype) {
-			return null;
+	public function value($val = null) {
+		if ($val) {
+			$this->_value = $val;
+			return;
 		}
 
-		return self::$templates[$this->_type]['subtypes'][$this->_subtype]['value'];
+		if (! $this->_value) {
+			if (! $this->_subtype) {
+				return null;
+			}
+
+			$this->_value = self::$templates[$this->_type]['subtypes'][$this->_subtype]['value'];
+		}
+
+		return $this->_value;
 	}
 }
 

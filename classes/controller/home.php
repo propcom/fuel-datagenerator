@@ -28,6 +28,25 @@ class Controller_Home extends \Controller_Template
 		$this->template->content->set_global('fs', \Fieldset::forge(), false);
 	}
 
+	public function action_generate()
+	{
+		$fields = \Input::post('field');
+		$templates = [];
+
+		foreach ($fields as $field)
+		{
+			if (! $field['name']) continue;
+
+			$t = new FieldTemplate($field['type']);
+			$t->value($field['value']);
+			$templates[$field['name']] = $t;
+		}
+
+		$data = DataGenerator::generate($templates, \Input::post('num_records'));
+
+		// TODO: other formats
+		return \Response::forge(json_encode($data), 200);
+	}
 	public function action_tablerow()
 	{
 		$coltype = \Input::post('type');

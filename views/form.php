@@ -1,4 +1,4 @@
-<form class="form-horizontal">
+<form class="form-horizontal" action="/datagenerator/home/generate" method="post">
 	<div class="well">
 		<div class="control-group">
 			<label class="control-label">Output format</label>
