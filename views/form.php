@@ -24,7 +24,7 @@
 		<tr>
 			<th>Field name</th>
 			<th>Type</th>
-			<th>Subtype</th>
+			<th>Preset</th>
 			<th>Options/values</th>
 		</tr>
 

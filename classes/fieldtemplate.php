@@ -10,8 +10,7 @@ class FieldTemplate
 	public static $templates = [
 		'name' => [
 			'display' => 'Name',
-			'type' => 'template',
-			'subtypes' => [
+			'presets' => [
 				'forename' => [
 					'display' => 'Forename',
 					'value' => '{forename}',
@@ -37,7 +36,7 @@ class FieldTemplate
 				'from' => 'date',
 				'to' => 'date',
 			],
-			'subtypes' => [
+			'presets' => [
 				'%d/%m/%Y' => [
 					'display' => '{name}',
 					'value' => '%d/%m/%Y',
@@ -47,7 +46,7 @@ class FieldTemplate
 	];
 
 	protected $_type;
-	protected $_subtype;
+	protected $_preset;
 	protected $_value;
 
 	public static function type_options() {
@@ -67,11 +66,11 @@ class FieldTemplate
 		$this->_type = $type;
 	}
 
-	public function subtype_options() {
+	public function preset_options() {
 		$arr = [];
 		$config = self::$templates[$this->_type];
 
-		foreach ($config['subtypes'] as $name => $st_config) {
+		foreach ($config['presets'] as $name => $st_config) {
 			$arr[$name] = $st_config['display'];
 		}
 
@@ -82,19 +81,19 @@ class FieldTemplate
 		return $this->_type;
 	}
 
-	public function subtype($st = null) {
+	public function preset($st = null) {
 		if (null === $st) {
-			return $this->_subtype;
+			return $this->_preset;
 		}
 
 		if ($st === false) {
-			$this->_subtype = '';
+			$this->_preset = '';
 		}
 		else {
-			if (isset(self::$templates[$this->_type]['subtypes'][$st]))
-				$this->_subtype = $st;
+			if (isset(self::$templates[$this->_type]['presets'][$st]))
+				$this->_preset = $st;
 			else
-				$this->_subtype = null;
+				$this->_preset = null;
 		}
 	}
 
@@ -105,11 +104,11 @@ class FieldTemplate
 		}
 
 		if (! $this->_value) {
-			if (! $this->_subtype) {
+			if (! $this->_preset) {
 				return null;
 			}
 
-			$this->_value = self::$templates[$this->_type]['subtypes'][$this->_subtype]['value'];
+			$this->_value = self::$templates[$this->_type]['presets'][$this->_preset]['value'];
 		}
 
 		return $this->_value;
@@ -117,7 +116,7 @@ class FieldTemplate
 }
 
 foreach (FieldTemplate::$templates as $name => &$config) {
-	foreach ($config['subtypes'] as $key => &$st_config) {
+	foreach ($config['presets'] as $key => &$st_config) {
 		$st_config['display'] = str_replace('{name}', $key, $st_config['display']);
 
 		if ($name == 'date') {

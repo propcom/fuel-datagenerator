@@ -1,6 +1,6 @@
 <tr>
 	<td>
-		<input name="field[<?=$i?>][name]" type="text" />
+		<input name="field[<?=$i?>][name]" type="text" value="<?= isset($name) ? $name : '' ?>"/>
 		<input name="i" value="<?=$i?>" type="hidden" />
 	</td>
 	<td>
@@ -12,12 +12,12 @@
 		->set_template('{field}')?>
 	</td>
 	<td>
-		<? if (isset($subtype_options)): ?>
-			<? // if subtype options are set the subtype should at least be null ?>
-			<?= (new \Fieldset_Field("field[$i][subtype]", '', [
+		<? if (isset($preset_options)): ?>
+			<? // if preset options are set the preset should at least be null ?>
+			<?= (new \Fieldset_Field("field[$i][preset]", '', [
 				'type' => 'select',
-				'value' => $subtype,
-				'options' => [ '' => '-- ( Presets ) --' ] + $subtype_options
+				'value' => $preset,
+				'options' => [ '' => '-- ( Presets ) --' ] + $preset_options
 			], [], $fs))
 			->set_template('{field}')?>
 		<? else: ?>

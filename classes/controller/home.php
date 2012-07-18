@@ -21,8 +21,8 @@ class Controller_Home extends \Controller_Template
 
 		$f_template = new FieldTemplate(key(FieldTemplate::type_options()));
 
-		$this->template->content->set_global('subtype_options', $f_template->subtype_options());
-		$this->template->content->set_global('subtype', null);
+		$this->template->content->set_global('preset_options', $f_template->preset_options());
+		$this->template->content->set_global('preset', null);
 		$this->template->content->set_global('value', null);
 
 		$this->template->content->set_global('fs', \Fieldset::forge(), false);
@@ -49,14 +49,15 @@ class Controller_Home extends \Controller_Template
 	}
 	public function action_tablerow()
 	{
+		$name = \Input::post('name');
 		$coltype = \Input::post('type');
-		$subtype = \Input::post('subtype');
+		$preset = \Input::post('preset');
 		$value = \Input::post('value');
 		$template = new FieldTemplate($coltype);
 
-		if ($subtype)
+		if ($preset)
 		{
-			$template->subtype($subtype);
+			$template->preset($preset);
 			$value = $template->value();
 		}
 
@@ -64,11 +65,13 @@ class Controller_Home extends \Controller_Template
 
 		$row->i = \Input::post('i');
 
+		$row->name = $name;
+
 		$row->type = $coltype;
 		$row->type_options = FieldTemplate::type_options();
 
-		$row->subtype_options = $template->subtype_options();
-		$row->subtype = $subtype;
+		$row->preset_options = $template->preset_options();
+		$row->preset = $preset;
 
 		$row->value = $value;
 

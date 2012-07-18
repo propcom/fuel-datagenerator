@@ -48,6 +48,29 @@ class DataGenerator {
 
 	protected static function _make_date($format, $config = null) {
 		$date = rand(0, time());
+
+		// TODO: min/max from $config
 		return strftime($format, $date);
+	}
+
+	protected static function _make_enum($options, $config = null) {
+		// TODO: one or many from config.
+		$options = explode('|', $options);
+
+		return $options[array_rand($options)];
+	}
+
+	protected static function _make_number($format) {
+		preg_match_all('/\{(\d+)\}/', $format, $matches);
+
+		foreach ($matches[1] as $token) {
+			$num = '';
+			for ($i = 0; $i < $token; $i++) {
+				$num .= rand(0,9);
+			}
+			$format = substr_replace($format, $num, strpos($format, "{{$token}}"), strlen($token) + 2);
+		}
+
+		return $format;
 	}
 }
