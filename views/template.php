@@ -13,6 +13,7 @@
 	<?php echo Asset::css('bootstrap-responsive.min.css'); ?>
 	<?php echo Asset::css('style.css'); ?>
 	<?php echo Asset::js('bootstrap.js'); ?>
+	<?php echo Asset::js('datagenerator.js'); ?>
 </head>
 <body>
 <div class="navbar navbar-fixed-top">

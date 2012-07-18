@@ -29,17 +29,7 @@
 		</tr>
 
 		<? for ($i = 0; $i < 5; $i++): ?>
-			<tr>
-				<td>
-					<input name="field[<?=$i?>][name]" type="text" />
-				</td>
-				<td>
-					<select name="field[<?=$i?>][type]">
-					</select>
-				</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
+			<?= \View::forge('form_row')->set('i', $i) ?>
 		<? endfor ?>
 	</table>
 
