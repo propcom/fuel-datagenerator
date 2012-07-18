@@ -31,7 +31,6 @@ class FieldTemplate
 		],
 		'date' => [
 			'display' => 'Date',
-			'type' => 'strftime',
 			'extra_fields' => [
 				'from' => 'date',
 				'to' => 'date',
@@ -43,6 +42,23 @@ class FieldTemplate
 				],
 			],
 		],
+		'enum' => [
+			'display' => 'Enum or set',
+			'type' => 'enum',
+		],
+		'number' => [
+			'display' => 'Numeric data',
+			'presets' => [
+				'uk_intl' => [
+					'display' => 'UK International',
+					'value' => '0044{10}'
+				],
+				'uk_nat' => [
+					'display' => 'UK National',
+					'value' => '(0{3}) {7}',
+				],
+			],
+		]
 	];
 
 	protected $_type;
