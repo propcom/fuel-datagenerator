@@ -63,7 +63,7 @@ class DataGenerator {
 					->where(\DB::expr('FIND_IN_SET(' . \DB::quote($token) . ', type)'), '!=', 0)
 					->order_by(\DB::expr('RAND()'))
 					->limit(1)
-					->execute()
+					->execute('datagenerator')
 					->as_array(null, 'value')[0];
 			}
 
