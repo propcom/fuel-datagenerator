@@ -45,38 +45,70 @@ class DataGenerator {
 		return array_splice(self::$_lipsum[$what], 0, $amount);
 	}
 
+	public static function parse_char_ranges($pattern) {
+		$str = preg_replace_callback(
+			'/.-./',
+			function($thing) {
+				$things = explode('-',  $thing[0]);
+				return implode('', array_map(function($_) { return chr($_); }, range(ord($things[0]), ord($things[1]))));
+			},
+			$pattern
+		);
+
+		return $str;
+	}
+
 	protected static function _make_name($template) {
 		return self::_make_string($template);
 	}
 
 	protected static function _make_string($template) {
-		preg_match_all('/\{(\w+)\}/', $template, $matches);
+		preg_match_all('/\{([^}]+)\}/', $template, $matches);
 
 		foreach ($matches[1] as $token) {
-			if ($token == 'initial') {
+			$parts = explode(':',$token);
+
+			$type = array_shift($parts);
+
+			if ($type == 'initial') {
 				$choice = chr(rand(65, 25+65));
 			}
-			elseif ($token == 'lipsum') {
+			elseif ($type == 'lipsum') {
 				$choice = join('.', self::lipsum(rand(1,3), 'words'));
 			}
-			elseif ($token == 'domain') {
+			elseif ($type == 'domain') {
 				$choice = join('.', self::lipsum(rand(1,2), 'words'));
 			}
-			elseif ($token == 'word') {
+			elseif ($type == 'word') {
 				$words = file(\Config::get('datagenerator.dict'), FILE_IGNORE_NEW_LINES);
 				$choice = $words[array_rand($words)];
+			}
+			elseif ($type == 'rand') {
+				$min = array_shift($parts) ?: 8;
+				$max = array_shift($parts) ?: $min;
+				$pattern = array_shift($parts) ?: 'a-zA-Z0-9';
+
+				$num = rand($min,$max);
+				$chars = str_split(self::parse_char_ranges($pattern));
+
+				$str = '';
+				for ($i = 0; $i < $num; ++$i) {
+					$str .= $chars[array_rand($chars)];
+				}
+
+				$choice = $str;
 			}
 			else {
 				$choice = \DB::select('value')
 					->from('string_template_values')
-					->where(\DB::expr('FIND_IN_SET(' . \DB::quote($token) . ', type)'), '!=', 0)
+					->where(\DB::expr('FIND_IN_SET(' . \DB::quote($type) . ', type)'), '!=', 0)
 					->order_by(\DB::expr('RAND()'))
 					->limit(1)
 					->execute('datagenerator')
 					->as_array(null, 'value');
 
 				if (!$choice) {
-					throw new \Exception("Couldn't find any string values for $token");
+					throw new \Exception("Couldn't find any string values for $type");
 				}
 
 				$choice = $choice[0];
