@@ -9,6 +9,8 @@ class DataGenerator {
 	protected static $_lipsum;
 
 	public static function generate($templates, $num_records) {
+		\Config::load('datagenerator');
+
 		$data = [];
 		for ($i = 0; $i < $num_records; $i++) {
 			$datum = [];
@@ -59,6 +61,10 @@ class DataGenerator {
 			}
 			elseif ($token == 'domain') {
 				$choice = join('.', self::lipsum(rand(1,2), 'words'));
+			}
+			elseif ($token == 'word') {
+				$words = file(\Config::get('datagenerator.dict'), FILE_IGNORE_NEW_LINES);
+				$choice = $words[array_rand($words)];
 			}
 			else {
 				$choice = \DB::select('value')
