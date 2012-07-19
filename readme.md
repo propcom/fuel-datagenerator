@@ -35,7 +35,7 @@ You create a FieldTemplate with a type
 and then you set the value, which will be a string describing the format of data relevant
 to that type.
 
-	$v->value('format string');
+    $v->value('format string');
 
 An array of these passed to \Datagenerator\DataGenerator::generate will produce an array of
 associative arrays of data.
@@ -50,11 +50,11 @@ There are three main types and a few secondary types. The titles here will be th
 to the constructor of your FieldTemplate, and the value you set on that object will comprise one
 or more of the format strings available.
 
-Creating that value is simply a case of writing a string containing {these}. Each of those will
+Creating that value is simply a case of writing a string containing `{these}`. Each of those will
 be taken out and replaced with random data, based on what is inside the brackets. The rest of the
 string will be left static.
 
-You can also specify parameters for them by using colons, e.g. {type:param1:param2}.
+You can also specify parameters for them by using colons, e.g. `{type:param1:param2}`.
 
 Check out the static array in FieldTemplate for some examples.
 
@@ -62,12 +62,12 @@ Check out the static array in FieldTemplate for some examples.
 
 ### initial
 
-{initial} will be replaced with a single random capital letter. There are no parameters
+`{initial}` will be replaced with a single random capital letter. There are no parameters
 for this.
 
 ### lipsum:concat:what:min:max
 
-{lipsum} will create a section of lorem ipsum text. Lipsum uses lipsum.org and hence requires a net
+`{lipsum}` will create a section of lorem ipsum text. Lipsum uses lipsum.org and hence requires a net
 connection. Feel free to patch this.
 
 The 'concat' parameter defaults to a single space. The string '\n' will be understood as a newline.
@@ -78,44 +78,44 @@ The 'what' parameter determines what to create and defaults to 'words'. Options 
 The 'min' and 'max' parameters determine a range for the random number of 'what's to generate. Min
 defaults to 1 and max defaults to whatever min was set to.
 
-{lipsum} is therefore short for {lipsum: :words:1:1}
+`{lipsum}` is therefore short for `{lipsum: :words:1:1}`
 
 ### domain
 
-{domain} will be replaced by any valid domain, simply by taking a lipsum word or two and putting dots
+`{domain}` will be replaced by any valid domain, simply by taking a lipsum word or two and putting dots
 between them.
 
 TODO: This format needs to take a parameter for the min and max number of parts to the domain.
 
 ### word
 
-{word} is replaced with any word from the file you configured in the datagenerator.dict config setting.
+`{word}` is replaced with any word from the file you configured in the datagenerator.dict config setting.
 
 ### rand:min:max:pattern
 
-{rand} creates a random string.
+`{rand}` creates a random string.
 
 The 'min' and 'max' parameters define a range for the random number of characters in the string. Min
 defaults to 8 and max defaults to whatever min was set to.
 
 The 'pattern' parameter determines characters that may be used. Character-class-style ranges are understood,
-and the default character set is a-zA-Z0-9
+and the default character set is `'a-zA-Z0-9'`
 
-{rand} is therefore short for {rand:8:8:a-zA-Z0-9}
+`{rand}` is therefore short for `{rand:8:8:a-zA-Z0-9}`
 
 ### surname, forename
 
-{surname} and {forename} are replaced with random values taken from the `string_template_values` table in 
+`{surname}` and `{forename}` are replaced with random values taken from the `string_template_values` table in 
 the database.
 
 ### tld
 
-{tld} is replaced with a random value from the `string_template_values` table in the database. TLDs in there
+`{tld}` is replaced with a random value from the `string_template_values` table in the database. TLDs in there
 do not have the leading dot, but any interim dots (e.g. co.uk) are there.
 
 ## date
 
-TODO: Currently the value for date does not use the {} syntax to delimit its formats.
+TODO: Currently the value for date does not use the `{}` syntax to delimit its formats.
 
 The value provided to the date type is passed directly to the `strftime` function (no feedback about the `date`
 function, please; `strftime` is a POSIX standard and probably older than you are). It is given a random date
@@ -125,7 +125,7 @@ TODO: Accept a date range.
 
 ## enum
 
-TODO: The enum type does not delimit its parts with {}.
+TODO: The enum type does not delimit its parts with `{}`.
 
 This simply divides the entire string on the `|` character and selects one of the resulting array.
 
@@ -133,10 +133,10 @@ TODO: Allow multiple for SET fields.
 
 ## number
 
-Number fields replace any part matching /\{\d+\}/ with that number of digits. E.g. {10} is replaced with 10
+Number fields replace any part matching `/\{\d+\}/` with that number of digits. E.g. `{10}` is replaced with 10
 random digits.
 
-To do this inside a string field you can use {rand:10:10:0-9} instead.
+To do this inside a string field you can use `{rand:10:10:0-9}` instead.
 
 # Bugs and TODOs
 
