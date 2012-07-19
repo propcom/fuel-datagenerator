@@ -74,7 +74,14 @@ class DataGenerator {
 				$choice = chr(rand(65, 25+65));
 			}
 			elseif ($type == 'lipsum') {
-				$choice = join('.', self::lipsum(rand(1,3), 'words'));
+				$concat = $parts ? array_shift($parts) : ' ';
+				$what = array_shift($parts) ?: 'words';
+				$min = array_shift($parts) ?: 1;
+				$max = array_shift($parts) ?: $min;
+
+				if ($concat == '\n') $concat = "\n";
+
+				$choice = join($concat, self::lipsum(rand($min,$max), $what));
 			}
 			elseif ($type == 'domain') {
 				$choice = join('.', self::lipsum(rand(1,2), 'words'));
