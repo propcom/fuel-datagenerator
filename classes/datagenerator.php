@@ -57,6 +57,9 @@ class DataGenerator {
 			if ($token == 'lipsum') {
 				$choice = join('.', self::lipsum(rand(1,3), 'words'));
 			}
+			if ($token == 'domain') {
+				$choice = join('.', self::lipsum(rand(1,2), 'words'));
+			}
 			else {
 				$choice = \DB::select('value')
 					->from('string_template_values')
@@ -64,7 +67,13 @@ class DataGenerator {
 					->order_by(\DB::expr('RAND()'))
 					->limit(1)
 					->execute('datagenerator')
-					->as_array(null, 'value')[0];
+					->as_array(null, 'value');
+
+				if (!$choice) {
+					throw new \Exception("Couldn't find any string values for $choice");
+				}
+
+				$choice = $choice[0];
 			}
 
 			$template = substr_replace($template, $choice, strpos($template, "{{$token}}"), strlen($token) + 2);
