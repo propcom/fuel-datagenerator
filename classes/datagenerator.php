@@ -70,7 +70,7 @@ class DataGenerator {
 					->as_array(null, 'value');
 
 				if (!$choice) {
-					throw new \Exception("Couldn't find any string values for $choice");
+					throw new \Exception("Couldn't find any string values for $token");
 				}
 
 				$choice = $choice[0];
