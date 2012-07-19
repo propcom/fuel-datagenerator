@@ -54,10 +54,10 @@ class DataGenerator {
 			if ($token == 'initial') {
 				$choice = chr(rand(65, 25+65));
 			}
-			if ($token == 'lipsum') {
+			elseif ($token == 'lipsum') {
 				$choice = join('.', self::lipsum(rand(1,3), 'words'));
 			}
-			if ($token == 'domain') {
+			elseif ($token == 'domain') {
 				$choice = join('.', self::lipsum(rand(1,2), 'words'));
 			}
 			else {
