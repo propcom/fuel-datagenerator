@@ -133,10 +133,16 @@ TODO: Allow multiple for SET fields.
 
 ## number
 
+`{num}`
+`{min:max}`
+
 Number fields replace any part matching `/\{\d+\}/` with that number of digits. E.g. `{10}` is replaced with 10
 random digits.
 
-To do this inside a string field you can use `{rand:10:10:0-9}` instead.
+The pattern `/\{\d+:\d+}/` is a min:max situation and will generate a number between min and max digits long. So
+`{4:10}` is replaced with between 4 and 10 digits.
+
+To do this inside a string field you can use `{rand:4:10:0-9}` (or `{rand:10:10:0-9}`) instead.
 
 # Bugs and TODOs
 

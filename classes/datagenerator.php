@@ -142,11 +142,21 @@ class DataGenerator {
 	}
 
 	protected static function _make_number($format) {
-		preg_match_all('/\{(\d+)\}/', $format, $matches);
+		preg_match_all('/\{(\d+)(?::(\d+))?\}/', $format, $matches);
 
-		foreach ($matches[1] as $token) {
+		foreach ($matches[0] as $i => $token) {
+			$min = $matches[1][$i];
+
+			if ($matches[2][$i]) {
+				$max = $matches[2][$i];
+			}
+			else {
+				$max = $min;
+				$min = 0;
+			}
+
 			$num = '';
-			for ($i = 0; $i < $token; $i++) {
+			for ($i = $min; $i < $max; $i++) {
 				$num .= rand(0,9);
 			}
 			$format = substr_replace($format, $num, strpos($format, "{{$token}}"), strlen($token) + 2);
