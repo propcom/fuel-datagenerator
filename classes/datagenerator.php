@@ -70,7 +70,18 @@ class DataGenerator {
 
 			$type = array_shift($parts);
 
-			if ($type == 'initial') {
+			if (is_numeric($type)) {
+				if (! count($parts)) {
+					throw new \UnexpectedValueException("Range template requires two parameters; only got one - $type");
+				}
+
+				$min = $type;
+				$max = $parts[0];
+
+				# 2:3 -> 10 ^ (2 - 1) = 10; 10 ^ 3 = 1000 - 1 = 999 -> 10 ... 999
+				return rand(pow(10, $min - 1), pow(10, $max) - 1);
+			}
+			elseif ($type == 'initial') {
 				$choice = chr(rand(65, 25+65));
 			}
 			elseif ($type == 'lipsum') {
