@@ -45,7 +45,9 @@ class Controller_Home extends \Controller_Template
 		$data = DataGenerator::generate($templates, \Input::post('num_records'));
 
 		// TODO: other formats
-		return \Response::forge(json_encode($data), 200);
+		return \Response::forge(json_encode($data, JSON_PRETTY_PRINT), 200, [
+			'Content-Type' => 'application/json'
+		]);
 	}
 	public function action_tablerow()
 	{
