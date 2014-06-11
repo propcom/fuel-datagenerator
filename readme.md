@@ -144,6 +144,32 @@ The pattern `/\{\d+:\d+}/` is a min:max situation and will generate a number bet
 
 To do this inside a string field you can use `{rand:4:10:0-9}` (or `{rand:10:10:0-9}`) instead.
 
+## maybe-formats
+
+`{?rand}`
+`{?=4rand}`
+
+A maybe-format is the `{}` format code with a `?` immediately following the
+opening brace. This can be used for the number and string field types.
+
+To use it, simply put a `?`, as noted, after the opening brace:
+
+    {?1:9}
+
+This will be given a value 50% of the time, and will be replaced with the
+empty string at other times.
+
+You can control how often it will appear by using the extended syntax:
+
+    {?=12:1:9}
+
+The whole structure `?=12:` is the maybe frequency; in this case the field
+will be displayed one in 12 times. Remember to use the colon to separate the
+frequency number from the actual format code.
+
+`2` is your current minimum because I got lazy with regexes and didn't fancy
+implementing floats.
+
 # Bugs and TODOs
 
 Well it's not perfect so it's probably buggy.

@@ -70,6 +70,16 @@ class DataGenerator {
 
 			$type = array_shift($parts);
 
+			# null means not-a-maybe pattern
+			$maybe = static::_check_maybe($type);
+			if ($maybe === false) {
+				$template = substr_replace($template, "", strpos($template, "{{$token}}"), strlen($token) + 2);
+				continue;
+			}
+			if ($maybe === true) {
+				$type = array_shift($parts);
+			}
+
 			if (is_numeric($type)) {
 				if (! count($parts)) {
 					throw new \UnexpectedValueException("Range template requires two parameters; only got one - $type");
@@ -153,13 +163,22 @@ class DataGenerator {
 	}
 
 	protected static function _make_number($format) {
-		preg_match_all('/\{(\d+)(?::(\d+))?\}/', $format, $matches);
+		preg_match_all('/\{(\?(?:=\d+:)?)?(\d+)(?::(\d+))?\}/', $format, $matches);
 
-		foreach ($matches[0] as $i => $token) {
-			$min = $matches[1][$i];
+		foreach ($matches[2] as $i => $token) {
+			# null means not-a-maybe pattern
+			if ($matches[1][0]) {
+				$maybe = static::_check_maybe($matches[1][0]);
+				if ($maybe === false) {
+					$format = substr_replace($format, '', strpos($format, "{{$format}}"), strlen($format));
+					continue;
+				}
+			}
 
-			if ($matches[2][$i]) {
-				$max = $matches[2][$i];
+			$min = $matches[2][$i];
+
+			if ($matches[3][$i]) {
+				$max = $matches[3][$i];
 			}
 			else {
 				$max = $min;
@@ -170,9 +189,22 @@ class DataGenerator {
 			for ($i = $min; $i < $max; $i++) {
 				$num .= rand(0,9);
 			}
-			$format = substr_replace($format, $num, strpos($format, "{{$token}}"), strlen($token) + 2);
+			$format = substr_replace($format, $num, strpos($format, "{{$format}}"), strlen($format));
 		}
 
 		return $format;
+	}
+
+	protected static function _check_maybe($format) {
+		if(! preg_match('/^\?(?:=(\d+))?/', $format, $matches)) {
+			return;
+		}
+
+		$rand = rand(1, \Arr::get($matches, 1, 2));
+		if ((int) $rand === 1) {
+			return true;
+		}
+
+		return false;
 	}
 }

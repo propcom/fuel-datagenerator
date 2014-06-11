@@ -68,7 +68,7 @@ return [
 				],
 				'zip' => [
 					'display' => 'Zip code',
-					'value' => '{1:9}{rand:4:4:0-9}',
+					'value' => '{rand:1:1:1-9}{rand:4:4:0-9}',
 				],
 			]
 		]
