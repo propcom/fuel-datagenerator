@@ -18,7 +18,7 @@ class DataGenerator {
 				$type = $template->type();
 				$value = $template->value();
 
-				$datum[$field] = self::{"_make_$type"}($value);
+				$datum[$field] = static::{"_make_$type"}($value);
 			}
 
 			$data[] = $datum;
@@ -28,7 +28,7 @@ class DataGenerator {
 	}
 
 	public static function lipsum($amount = 1, $what = 'paras', $start = 0) {
-		if (! self::$_lipsum or !isset(self::$_lipsum[$what]) or count(self::$_lipsum[$what]) < $amount) {
+		if (! static::$_lipsum or !isset(static::$_lipsum[$what]) or count(static::$_lipsum[$what]) < $amount) {
 			$n = $amount * 5;
 
 			$lipsum = simplexml_load_file("http://www.lipsum.com/feed/xml?amount=$n&what=$what&start=$start")->lipsum;
@@ -39,10 +39,10 @@ class DataGenerator {
 				$lipsum = preg_replace('/[[:punct:]]/', '', $lipsum);
 			}
 			$lipsum = explode($split, $lipsum);
-			self::$_lipsum[$what] = $lipsum;
+			static::$_lipsum[$what] = $lipsum;
 		}
 
-		return array_splice(self::$_lipsum[$what], 0, $amount);
+		return array_splice(static::$_lipsum[$what], 0, $amount);
 	}
 
 	public static function parse_char_ranges($pattern) {
@@ -59,7 +59,7 @@ class DataGenerator {
 	}
 
 	protected static function _make_name($template) {
-		return self::_make_string($template);
+		return static::_make_string($template);
 	}
 
 	protected static function _make_string($template) {
@@ -92,10 +92,10 @@ class DataGenerator {
 
 				if ($concat == '\n') $concat = "\n";
 
-				$choice = join($concat, self::lipsum(rand($min,$max), $what));
+				$choice = join($concat, static::lipsum(rand($min,$max), $what));
 			}
 			elseif ($type == 'domain') {
-				$choice = join('.', self::lipsum(rand(1,2), 'words'));
+				$choice = join('.', static::lipsum(rand(1,2), 'words'));
 			}
 			elseif ($type == 'word') {
 				$words = file(\Config::get('datagenerator.dict'), FILE_IGNORE_NEW_LINES);
@@ -107,7 +107,7 @@ class DataGenerator {
 				$pattern = array_shift($parts) ?: 'a-zA-Z0-9';
 
 				$num = rand($min,$max);
-				$chars = str_split(self::parse_char_ranges($pattern));
+				$chars = str_split(static::parse_char_ranges($pattern));
 
 				$str = '';
 				for ($i = 0; $i < $num; ++$i) {

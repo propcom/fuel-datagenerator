@@ -78,7 +78,7 @@ class FieldTemplate
 	public static function type_options() {
 		$arr = [];
 
-		foreach (self::$templates as $name => $config) {
+		foreach (static::$templates as $name => $config) {
 			$arr[$name] = $config['display'];
 		}
 
@@ -94,7 +94,7 @@ class FieldTemplate
 
 	public function preset_options() {
 		$arr = [];
-		$config = self::$templates[$this->_type];
+		$config = static::$templates[$this->_type];
 
 		foreach ($config['presets'] as $name => $st_config) {
 			$arr[$name] = $st_config['display'];
@@ -116,7 +116,7 @@ class FieldTemplate
 			$this->_preset = '';
 		}
 		else {
-			if (isset(self::$templates[$this->_type]['presets'][$st]))
+			if (isset(static::$templates[$this->_type]['presets'][$st]))
 				$this->_preset = $st;
 			else
 				$this->_preset = null;
@@ -134,7 +134,7 @@ class FieldTemplate
 				return null;
 			}
 
-			$this->_value = self::$templates[$this->_type]['presets'][$this->_preset]['value'];
+			$this->_value = static::$templates[$this->_type]['presets'][$this->_preset]['value'];
 		}
 
 		return $this->_value;
