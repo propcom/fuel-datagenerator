@@ -79,7 +79,7 @@ class DataGenerator {
 				$max = $parts[0];
 
 				# 2:3 -> 10 ^ (2 - 1) = 10; 10 ^ 3 = 1000 - 1 = 999 -> 10 ... 999
-				return rand(pow(10, $min - 1), pow(10, $max) - 1);
+				$choice = rand(pow(10, $min - 1), pow(10, $max) - 1);
 			}
 			elseif ($type == 'initial') {
 				$choice = chr(rand(65, 25+65));
