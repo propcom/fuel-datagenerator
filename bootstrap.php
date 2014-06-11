@@ -7,4 +7,5 @@ array_push($module_paths,  __DIR__ . '/modules/' );
 Autoloader::add_classes([
 	'Datagenerator\DataGenerator' => __DIR__.'/classes/datagenerator.php',
 	'Datagenerator\FieldTemplate' => __DIR__.'/classes/fieldtemplate.php',
+	'Datagenerator\Format'        => __DIR__.'/classes/format.php',
 ]);

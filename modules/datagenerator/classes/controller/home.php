@@ -2,7 +2,6 @@
 
 namespace Datagenerator;
 
-
 class Controller_Home extends \Controller_Template
 {
 	public $template = 'template';
@@ -30,7 +29,7 @@ class Controller_Home extends \Controller_Template
 
 	public function action_generate()
 	{
-		$fields = \Input::post('field');
+		$fields = \Input::get('field');
 		$templates = [];
 
 		foreach ($fields as $field)
@@ -42,13 +41,17 @@ class Controller_Home extends \Controller_Template
 			$templates[$field['name']] = $t;
 		}
 
-		$data = DataGenerator::generate($templates, \Input::post('num_records'));
+		$data = DataGenerator::generate($templates, \Input::get('num_records'));
+
+		$format = Format::forge();
+		$formatted = $format->{"to_" . \Input::get('format')}($data);
 
 		// TODO: other formats
-		return \Response::forge(json_encode($data, JSON_PRETTY_PRINT), 200, [
-			'Content-Type' => 'application/json'
+		return \Response::forge($formatted, 200, [
+			'Content-Type' => \Config::get('format.mime_types.' . \Input::get('format'), 'text/plain'),
 		]);
 	}
+
 	public function action_tablerow()
 	{
 		$name = \Input::post('name');

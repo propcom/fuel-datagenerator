@@ -1,4 +1,4 @@
-<form class="form-horizontal" action="/datagenerator/home/generate" method="post">
+<form class="form-horizontal" action="/datagenerator/home/generate" method="get">
 	<div class="well">
 		<div class="control-group">
 			<label class="control-label">Output format</label>
@@ -8,6 +8,9 @@
 				</label>
 				<label class="radio">
 					<input type="radio" name="format" value="sql"/> SQL
+				</label>
+				<label class="radio">
+					<input type="radio" name="format" value="csv"/> CSV
 				</label>
 			</div>
 		</div>
