@@ -7,73 +7,26 @@ namespace Datagenerator;
  **/
 class FieldTemplate
 {
-	public static $templates = [
-		'name' => [
-			'display' => 'Name',
-			'presets' => [
-				'forename' => [
-					'display' => 'Forename',
-					'value' => '{forename}',
-				],
-				'surname' => [
-					'display' => 'Surname',
-					'value' => '{surname}',
-				],
-				'name' => [
-					'display' => 'Forename Surname',
-					'value' => '{forename} {surname}',
-				],
-				'fullname' => [
-					'display' => 'Forename X. Surname',
-					'value' => '{forename} {initial}. {surname}',
-				],
-			],
-		],
-		'date' => [
-			'display' => 'Date',
-			'extra_fields' => [
-				'from' => 'date',
-				'to' => 'date',
-			],
-			'presets' => [
-				'%d/%m/%Y' => [
-					'display' => '{name}',
-					'value' => '%d/%m/%Y',
-				],
-			],
-		],
-		'enum' => [
-			'display' => 'Enum or set',
-			'type' => 'enum',
-			'presets' => [],
-		],
-		'number' => [
-			'display' => 'Numeric data',
-			'presets' => [
-				'uk_intl' => [
-					'display' => 'UK International',
-					'value' => '0044{10}'
-				],
-				'uk_nat' => [
-					'display' => 'UK National',
-					'value' => '(0{3}) {7}',
-				],
-			],
-		],
-		'string' => [
-			'display' => 'String data',
-			'presets' => [
-				'email1' => [
-					'display' => 'Email address',
-					'value' => '{forename}{surname}@{domain}',
-				]
-			]
-		]
-	];
+	public static $templates;
 
 	protected $_type;
 	protected $_preset;
 	protected $_value;
+
+	public static function _init() {
+		\Config::load('datagenerator',true);
+		static::$templates = \Config::get('datagenerator.templates');
+
+		foreach (static::$templates as $name => &$config) {
+			foreach ($config['presets'] as $key => &$st_config) {
+				$st_config['display'] = str_replace('{name}', $key, $st_config['display']);
+
+				if ($name == 'date') {
+					$st_config['display'] = strftime($st_config['display']);
+				}
+			}
+		}
+	}
 
 	public static function type_options() {
 		$arr = [];
@@ -138,15 +91,5 @@ class FieldTemplate
 		}
 
 		return $this->_value;
-	}
-}
-
-foreach (FieldTemplate::$templates as $name => &$config) {
-	foreach ($config['presets'] as $key => &$st_config) {
-		$st_config['display'] = str_replace('{name}', $key, $st_config['display']);
-
-		if ($name == 'date') {
-			$st_config['display'] = strftime($st_config['display']);
-		}
 	}
 }
